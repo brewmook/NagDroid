@@ -3,8 +3,7 @@ package com.coolhandmook.nagdroid;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
+import android.widget.ListView;
 
 public class NewNag extends Activity {
 
@@ -12,6 +11,9 @@ public class NewNag extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_nag);
+        
+        ListView listView = (ListView) findViewById(R.id.applicationsList);
+        listView.setAdapter(new ApplicationViewAdapter(getApplicationContext()));
     }
 
     @Override
