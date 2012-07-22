@@ -2,73 +2,55 @@ package com.coolhandmook.nagdroid;
 
 import java.util.List;
 
-import android.content.Context;
-import android.database.DataSetObserver;
+import android.app.Activity;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ListAdapter;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-public class ApplicationViewAdapter implements ListAdapter
-{
-	private final Context applicationContext;
-	private List<Application> applications;
+public class ApplicationViewAdapter extends ArrayAdapter<Application> {
 
-	public ApplicationViewAdapter(Context applicationContext, List<Application> applications) {
-		this.applicationContext = applicationContext;
-		this.applications = applications;
-	}
-	
-	public int getCount() {
-		return applications.size();
-	}
+	private Activity activity;
 
-	public Object getItem(int position) {
-		return applications.get(position);
+	public ApplicationViewAdapter(Activity activity,
+								  int textViewResourceId,
+								  List<Application> applications)
+	{
+		super(activity, textViewResourceId, applications);
+		this.activity = activity;
 	}
 
-	public long getItemId(int position) {
-		return position;
+	@Override
+	public View getDropDownView(int position, View convertView, ViewGroup parent) {
+		return getCustomView(position, convertView, parent);
 	}
 
-	public int getItemViewType(int position) {
-		return 0;
-	}
-
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Button view = (Button) convertView;
-		if (view == null)
-			view = new Button(applicationContext);
-		
-		view.setText(applications.get(position).label);
-		return view;
+		return getCustomView(position, convertView, parent);
 	}
 
-	public int getViewTypeCount() {
-		return 1;
-	}
+	private View getCustomView(int position, View convertView, ViewGroup parent)
+	{
+		View row = convertView;
+		if (row == null)
+		{
+			row = activity.getLayoutInflater().inflate(R.layout.application_row, parent, false);
+		}
 
-	public boolean hasStableIds() {
-		return true;
-	}
+		Application app = getItem(position);
+		TextView label = (TextView) row.findViewById(R.id.applicationName);
+		label.setText(app.label + " (" + position + " of " + getCount() + ")");
 
-	public boolean isEmpty() {
-		return applications.isEmpty();
-	}
+		ImageView icon = (ImageView) row.findViewById(R.id.applicationIcon);
+		try {
+			icon.setImageDrawable(activity.getPackageManager().getApplicationIcon(app.packageName));
+		} catch (NameNotFoundException e) {
+			icon.setImageResource(R.drawable.ic_launcher);
+		}
 
-	public void registerDataSetObserver(DataSetObserver observer) {
-		
-	}
-
-	public void unregisterDataSetObserver(DataSetObserver observer) {
-		
-	}
-
-	public boolean areAllItemsEnabled() {
-		return true;
-	}
-
-	public boolean isEnabled(int position) {
-		return true;
+		return row;
 	}
 }

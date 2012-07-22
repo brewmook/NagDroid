@@ -5,12 +5,12 @@ import android.content.Intent;
 public class Application
 {
 	public final String label;
-	public final Intent openIntent;
+	public final String packageName;
 
-	public Application(String label, Intent openIntent)
+	public Application(String label, String packageName)
 	{
 		this.label = label;
-		this.openIntent = openIntent;
+		this.packageName = packageName;
 	}
 	
 	@Override

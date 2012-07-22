@@ -32,7 +32,7 @@ public class ApplicationsModel {
 				Intent intent = packageManager.getLaunchIntentForPackage(app.packageName);
 				if (intent != null)
 				{
-					applications.add(new Application(label.toString(), intent));
+					applications.add(new Application(label.toString(), app.packageName));
 				}
 			}
 		}

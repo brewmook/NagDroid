@@ -20,14 +20,11 @@ public class NewNag extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_nag);
         
-        applicationsModel = new ApplicationsModel(getApplicationContext().getPackageManager());
+        applicationsModel = new ApplicationsModel(getPackageManager());
         applications = applicationsModel.getApplications();
         
         Spinner spinner = (Spinner) findViewById(R.id.applicationNameSpinner);
-        
-        ArrayAdapter<Application> adapter = new ArrayAdapter<Application>(this, android.R.layout.simple_spinner_item, applications);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        spinner.setAdapter(new ApplicationViewAdapter(this, R.id.applicationName, applications));
     }
 
     @Override
@@ -39,8 +36,12 @@ public class NewNag extends Activity {
     public void onApplicationOpen(View view) {
     	Spinner spinner = (Spinner) findViewById(R.id.applicationNameSpinner);
     	int selected = spinner.getLastVisiblePosition();
-    	Intent intent = applications.get(selected).openIntent;
-    	startActivity(intent);
+    	
+    	Intent intent = getPackageManager().getLaunchIntentForPackage(applications.get(selected).packageName);
+    	if (intent != null)
+    	{
+    		startActivity(intent);
+    	}
     }
     
 }
