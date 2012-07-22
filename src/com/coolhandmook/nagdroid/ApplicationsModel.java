@@ -1,5 +1,7 @@
 package com.coolhandmook.nagdroid;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
@@ -23,8 +25,14 @@ public class ApplicationsModel {
 		for (int i = 0; i < apps.size(); ++i)
 		{
 			CharSequence label = packageManager.getApplicationLabel(apps.get(i));
-			applications.add(new Application(label));
+			applications.add(new Application(label.toString()));
 		}
+		
+		Collections.sort(applications, new Comparator<Application>() {
+	        public int compare(Application o1, Application o2) {
+	            return o1.label.compareTo(o2.label);
+	        }           
+	    });
 		
 		return applications;
 	}
