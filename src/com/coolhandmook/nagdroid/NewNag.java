@@ -1,9 +1,10 @@
 package com.coolhandmook.nagdroid;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
-import android.widget.ListView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 public class NewNag extends Activity {
 
@@ -16,8 +17,11 @@ public class NewNag extends Activity {
         
         applicationsModel = new ApplicationsModel(getApplicationContext().getPackageManager());
         
-        ListView listView = (ListView) findViewById(R.id.applicationsList);
-        listView.setAdapter(new ApplicationViewAdapter(getApplicationContext(), applicationsModel.getApplications()));
+        Spinner spinner = (Spinner) findViewById(R.id.applicationNameSpinner);
+        
+        ArrayAdapter<Application> adapter = new ArrayAdapter<Application>(this, android.R.layout.simple_spinner_item, applicationsModel.getApplications());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
     }
 
     @Override

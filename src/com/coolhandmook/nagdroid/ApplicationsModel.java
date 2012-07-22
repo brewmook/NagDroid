@@ -24,8 +24,12 @@ public class ApplicationsModel {
 		List<Application> applications = new Vector<Application>();
 		for (int i = 0; i < apps.size(); ++i)
 		{
-			CharSequence label = packageManager.getApplicationLabel(apps.get(i));
-			applications.add(new Application(label.toString()));
+			ApplicationInfo app = apps.get(i);
+			if (app.enabled)
+			{
+				CharSequence label = packageManager.getApplicationLabel(app);
+				applications.add(new Application(label.toString()));
+			}
 		}
 		
 		Collections.sort(applications, new Comparator<Application>() {
