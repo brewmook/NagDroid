@@ -1,6 +1,7 @@
 package com.coolhandmook.nagdroid;
 
 import java.util.List;
+import java.util.Vector;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -13,22 +14,29 @@ import android.widget.ListAdapter;
 
 public class ApplicationViewAdapter implements ListAdapter
 {
-	private final PackageManager packageManager;
-	private final List<ApplicationInfo> apps;
 	private final Context applicationContext;
+	private List<Application> applications;
 
 	public ApplicationViewAdapter(Context applicationContext) {
 		this.applicationContext = applicationContext;
-		this.packageManager = applicationContext.getPackageManager();
-		this.apps = packageManager.getInstalledApplications(0);
+		
+		PackageManager packageManager = applicationContext.getPackageManager();		
+		List<ApplicationInfo> apps = packageManager.getInstalledApplications(0);
+
+		applications = new Vector<Application>();
+		for (int i = 0; i < apps.size(); ++i)
+		{
+			CharSequence label = packageManager.getApplicationLabel(apps.get(i));
+			applications.add(new Application(label));
+		}
 	}
 	
 	public int getCount() {
-		return apps.size();
+		return applications.size();
 	}
 
 	public Object getItem(int position) {
-		return apps.get(position);
+		return applications.get(position);
 	}
 
 	public long getItemId(int position) {
@@ -44,7 +52,7 @@ public class ApplicationViewAdapter implements ListAdapter
 		if (view == null)
 			view = new Button(applicationContext);
 		
-		view.setText(this.packageManager.getApplicationLabel(apps.get(position)));
+		view.setText(applications.get(position).label);
 		return view;
 	}
 
@@ -57,7 +65,7 @@ public class ApplicationViewAdapter implements ListAdapter
 	}
 
 	public boolean isEmpty() {
-		return apps.isEmpty();
+		return applications.isEmpty();
 	}
 
 	public void registerDataSetObserver(DataSetObserver observer) {
