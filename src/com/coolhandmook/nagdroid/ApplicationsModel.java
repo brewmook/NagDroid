@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
@@ -28,7 +29,11 @@ public class ApplicationsModel {
 			if (app.enabled)
 			{
 				CharSequence label = packageManager.getApplicationLabel(app);
-				applications.add(new Application(label.toString()));
+				Intent intent = packageManager.getLaunchIntentForPackage(app.packageName);
+				if (intent != null)
+				{
+					applications.add(new Application(label.toString(), intent));
+				}
 			}
 		}
 		
