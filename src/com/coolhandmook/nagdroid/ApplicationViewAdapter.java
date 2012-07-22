@@ -1,11 +1,8 @@
 package com.coolhandmook.nagdroid;
 
 import java.util.List;
-import java.util.Vector;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,18 +14,9 @@ public class ApplicationViewAdapter implements ListAdapter
 	private final Context applicationContext;
 	private List<Application> applications;
 
-	public ApplicationViewAdapter(Context applicationContext) {
+	public ApplicationViewAdapter(Context applicationContext, List<Application> applications) {
 		this.applicationContext = applicationContext;
-		
-		PackageManager packageManager = applicationContext.getPackageManager();		
-		List<ApplicationInfo> apps = packageManager.getInstalledApplications(0);
-
-		applications = new Vector<Application>();
-		for (int i = 0; i < apps.size(); ++i)
-		{
-			CharSequence label = packageManager.getApplicationLabel(apps.get(i));
-			applications.add(new Application(label));
-		}
+		this.applications = applications;
 	}
 	
 	public int getCount() {

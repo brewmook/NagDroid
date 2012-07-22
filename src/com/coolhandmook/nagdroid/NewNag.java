@@ -7,13 +7,17 @@ import android.widget.ListView;
 
 public class NewNag extends Activity {
 
-    @Override
+    private ApplicationsModel applicationsModel;
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_nag);
         
+        applicationsModel = new ApplicationsModel(getApplicationContext().getPackageManager());
+        
         ListView listView = (ListView) findViewById(R.id.applicationsList);
-        listView.setAdapter(new ApplicationViewAdapter(getApplicationContext()));
+        listView.setAdapter(new ApplicationViewAdapter(getApplicationContext(), applicationsModel.getApplications()));
     }
 
     @Override
