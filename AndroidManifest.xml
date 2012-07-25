@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewNag"
+            android:name=".NewNagActivity"
             android:label="@string/create_new_nag" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -10,7 +10,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Spinner;
 
-public class NewNag extends Activity {
+public class NewNagActivity extends Activity {
 
 	private ApplicationViewAdapter viewAdapter;
 

@@ -22,6 +22,6 @@ public class MainActivity extends Activity {
 
     public void onCreateNewNagClick(View view)
     {
-    	startActivity(new Intent(this, NewNag.class));
+    	startActivity(new Intent(this, NewNagActivity.class));
     }
 }
