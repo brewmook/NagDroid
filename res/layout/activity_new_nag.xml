@@ -8,11 +8,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <Button
-        android:id="@+id/openApplicationButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/scheduleNagButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="onApplicationOpen"
-        android:text="@string/openApplication" />
+        android:onClick="onScheduleNagClick"
+        android:text="@string/schedule_nag" />
 
 </LinearLayout>

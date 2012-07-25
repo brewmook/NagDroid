@@ -3,6 +3,6 @@
     <string name="app_name">NagDroid</string>
     <string name="create_new_nag">Create new nag</string>
     <string name="menu_settings">Settings</string>
-    <string name="openApplication">Open Application</string>
+    <string name="schedule_nag">Schedule nag</string>
 
 </resources>
