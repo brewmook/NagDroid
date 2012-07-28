@@ -1,14 +1,16 @@
 package com.coolhandmook.nagdroid;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -40,12 +42,15 @@ public class NewNagActivity extends Activity {
     	Spinner spinner = (Spinner) findViewById(R.id.applicationNameSpinner);
     	int selected = spinner.getLastVisiblePosition();
     	
-    	Intent intent = getPackageManager().getLaunchIntentForPackage(viewAdapter.getItem(selected).packageName);
+    	ApplicationInfo application = viewAdapter.getItem(selected);
+		Intent intent = getPackageManager().getLaunchIntentForPackage(application.packageName);
     	if (intent != null)
     	{
+    		long time = timeInMilliseconds();
     		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
     		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-    		alarmManager.set(AlarmManager.RTC, timeInMilliseconds(), pendingIntent);
+    		alarmManager.set(AlarmManager.RTC, time, pendingIntent);
+    		addSchedule(time, application.packageName);
     	}
     }
     
@@ -57,6 +62,18 @@ public class NewNagActivity extends Activity {
     	calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
     	calendar.set(Calendar.SECOND, 0);
     	return calendar.getTimeInMillis();
+    }
+    
+    private void addSchedule(long time, String packageName)
+    {
+    	DatabaseOpenHelper dbOpener = new DatabaseOpenHelper(this);
+    	SQLiteDatabase db = dbOpener.getWritableDatabase();
+    	
+    	ContentValues values = new ContentValues();
+    	values.put(Database.SCHEDULED_TIME, time);
+    	values.put(Database.SCHEDULED_PACKAGE, packageName);
+
+    	db.insert(Database.SCHEDULED_TABLE, null, values);
     }
     
 }
