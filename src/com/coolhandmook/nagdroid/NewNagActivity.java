@@ -4,19 +4,13 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 public class NewNagActivity extends Activity {
 

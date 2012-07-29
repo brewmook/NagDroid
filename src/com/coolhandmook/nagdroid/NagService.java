@@ -7,7 +7,6 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 public class NagService extends IntentService
 {
@@ -64,8 +63,6 @@ public class NagService extends IntentService
 	
 	private void launchApplication(String packageName)
 	{
-//		Toast toast = Toast.makeText(this, "Faking app launch", Toast.LENGTH_SHORT);
-//		toast.show();
 		Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
     	startActivity(intent);
 	}
@@ -76,7 +73,6 @@ public class NagService extends IntentService
 		ScheduledLaunch nextLaunch = database.nextScheduledLaunch(currentTime);
 		if (nextLaunch != null)
 		{
-			//boolean blah = nextLaunch.time < currentTime;
 			if (nextLaunch.time > 0)
 			{
 				Intent trigger = new Intent(this, NagService.class);
