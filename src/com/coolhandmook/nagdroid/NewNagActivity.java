@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class NewNagActivity extends Activity {
 
@@ -46,11 +47,11 @@ public class NewNagActivity extends Activity {
 		Intent intent = getPackageManager().getLaunchIntentForPackage(application.packageName);
     	if (intent != null)
     	{
-    		long time = timeInMilliseconds();
-    		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-    		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-    		alarmManager.set(AlarmManager.RTC, time, pendingIntent);
-    		addSchedule(time, application.packageName);
+    		Intent scheduleNew = new Intent(this, NagService.class);
+    		scheduleNew.setAction(NagService.SCHEDULE_NEW);
+    		scheduleNew.putExtra(NagService.ARG_TIME, timeInMilliseconds());
+    		scheduleNew.putExtra(NagService.ARG_PACKAGE, application.packageName);
+    		startService(scheduleNew);
     	}
     }
     
@@ -62,18 +63,6 @@ public class NewNagActivity extends Activity {
     	calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
     	calendar.set(Calendar.SECOND, 0);
     	return calendar.getTimeInMillis();
-    }
-    
-    private void addSchedule(long time, String packageName)
-    {
-    	DatabaseOpenHelper dbOpener = new DatabaseOpenHelper(this);
-    	SQLiteDatabase db = dbOpener.getWritableDatabase();
-    	
-    	ContentValues values = new ContentValues();
-    	values.put(Database.SCHEDULED_TIME, time);
-    	values.put(Database.SCHEDULED_PACKAGE, packageName);
-
-    	db.insert(Database.SCHEDULED_TABLE, null, values);
     }
     
 }

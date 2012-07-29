@@ -27,6 +27,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.coolhandmook.nagdroid.MainActivity" />
         </activity>
+        <service android:name=".NagService" android:enabled="true" />
     </application>
 
 </manifest>
