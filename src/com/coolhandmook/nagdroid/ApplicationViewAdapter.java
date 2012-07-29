@@ -69,7 +69,7 @@ public class ApplicationViewAdapter extends ArrayAdapter<ApplicationInfo> {
 		View row = convertView;
 		if (row == null)
 		{
-			row = activity.getLayoutInflater().inflate(R.layout.application_row, parent, false);
+			row = activity.getLayoutInflater().inflate(R.layout.new_nag_app_row, parent, false);
 		}
 
 		PackageManager packageManager = activity.getPackageManager();

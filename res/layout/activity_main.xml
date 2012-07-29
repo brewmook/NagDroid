@@ -10,4 +10,11 @@
         android:text="@string/create_new_nag"
         android:onClick="onCreateNewNagClick" />
 
+    <Button
+        android:id="@+id/showScheduleButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/show_schedule"
+        android:onClick="onShowScheduleClick" />
+
 </LinearLayout>

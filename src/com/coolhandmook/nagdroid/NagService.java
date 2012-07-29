@@ -32,6 +32,13 @@ public class NagService extends IntentService
 	}
 	
 	@Override
+	public void onDestroy()
+	{
+		database.close();
+		super.onDestroy();
+	}
+	
+	@Override
 	protected void onHandleIntent(Intent intent)
 	{
 		if (intent.getAction() == SCHEDULE_NEW)

@@ -24,4 +24,9 @@ public class MainActivity extends Activity {
     {
     	startActivity(new Intent(this, NewNagActivity.class));
     }
+
+    public void onShowScheduleClick(View view)
+    {
+    	startActivity(new Intent(this, ShowScheduleActivity.class));
+    }
 }

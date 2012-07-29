@@ -20,6 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name=".NewNagActivity"
             android:label="@string/create_new_nag" >
@@ -27,7 +28,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.coolhandmook.nagdroid.MainActivity" />
         </activity>
-        <service android:name=".NagService" android:enabled="true" />
+
+        <activity
+            android:name=".ShowScheduleActivity"
+            android:label="@string/title_activity_show_schedule" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.coolhandmook.nagdroid.MainActivity" />
+        </activity>
+        
+        <service
+            android:name=".NagService"
+            android:enabled="true" />
     </application>
 
 </manifest>

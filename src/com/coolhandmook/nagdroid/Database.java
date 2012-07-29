@@ -83,5 +83,10 @@ public class Database {
 	{
 		return new ScheduledLaunch(cursor.getLong(0), cursor.getString(1));
 	}
+
+	public void close()
+	{
+		db.close();
+	}
 	
 }

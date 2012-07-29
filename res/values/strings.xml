@@ -4,5 +4,7 @@
     <string name="create_new_nag">Create new nag</string>
     <string name="menu_settings">Settings</string>
     <string name="schedule_nag">Schedule nag</string>
+    <string name="title_activity_show_schedule">Current schedule</string>
+    <string name="show_schedule">Show schedule</string>
 
 </resources>
