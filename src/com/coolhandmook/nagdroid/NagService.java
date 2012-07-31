@@ -11,6 +11,7 @@ import android.content.Intent;
 public class NagService extends IntentService
 {
 	public final static String SCHEDULE_NEW = "com.coolhandmook.nagdroid.SCHEDULE_NEW";
+	public final static String SCHEDULE_REMOVE = "com.coolhandmook.nagdroid.SCHEDULE_REMOVE";
 	public final static String TRIGGER_ALARM = "com.coolhandmook.nagdroid.TRIGGER";
 
 	public final static String ARG_TIME = "com.coolhandmook.nagdroid.TIME";
@@ -46,6 +47,11 @@ public class NagService extends IntentService
 			database.addSchedule(new ScheduledLaunch(intent.getLongExtra(ARG_TIME, 0),
 													 intent.getStringExtra(ARG_PACKAGE)));
 			checkSchedule();
+		}
+		else if (intent.getAction() == SCHEDULE_REMOVE)
+		{
+			database.removeSchedule(new ScheduledLaunch(intent.getLongExtra(ARG_TIME, 0),
+														intent.getStringExtra(ARG_PACKAGE)));
 		}
 		else if (intent.getAction() == TRIGGER_ALARM)
 		{

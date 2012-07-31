@@ -33,6 +33,14 @@ public class Database {
 		db.insert(SCHEDULED_TABLE, null, values);
 	}
 	
+	public void removeSchedule(ScheduledLaunch launch)
+	{
+		db.delete(SCHEDULED_TABLE,
+				  SCHEDULED_TIME + " = " + Long.toString(launch.time)
+				  + " AND " + SCHEDULED_PACKAGE + " = '" + launch.packageName + "'",
+				  null);
+	}
+	
 	public ScheduledLaunch nextScheduledLaunch(long asOfThisTime)
 	{
 		ScheduledLaunch result = null;
