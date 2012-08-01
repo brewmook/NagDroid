@@ -22,9 +22,11 @@ public class NewNagActivity extends Activity {
         setContentView(R.layout.activity_new_nag);
         
         viewAdapter = new ApplicationViewAdapter(this, R.id.applicationName, getPackageManager().getInstalledApplications(0));
-        
         Spinner spinner = (Spinner) findViewById(R.id.applicationNameSpinner);
         spinner.setAdapter(viewAdapter);
+        
+        TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
+        timePicker.setIs24HourView(true);
     }
 
     @Override

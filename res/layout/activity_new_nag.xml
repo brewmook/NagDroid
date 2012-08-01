@@ -9,15 +9,29 @@
         android:layout_weight="1"
         android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/timeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/time" />
+
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/applicationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/application" />
+
         <Spinner
             android:id="@+id/applicationNameSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <TimePicker
-            android:id="@+id/timePicker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
@@ -39,7 +53,6 @@
             android:layout_weight="1"
             android:onClick="onNagCancel"
             android:text="@string/cancel" />
-
     </LinearLayout>
 
 </LinearLayout>
