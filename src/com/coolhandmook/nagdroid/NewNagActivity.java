@@ -33,7 +33,8 @@ public class NewNagActivity extends Activity {
         return true;
     }
     
-    public void onScheduleNagClick(View view) {
+    public void onNagSave(View view)
+    {
     	Spinner spinner = (Spinner) findViewById(R.id.applicationNameSpinner);
     	int selected = spinner.getLastVisiblePosition();
     	
@@ -47,6 +48,13 @@ public class NewNagActivity extends Activity {
     		scheduleNew.putExtra(NagService.ARG_PACKAGE, application.packageName);
     		startService(scheduleNew);
     	}
+    	
+    	finish();
+    }
+
+    public void onNagCancel(View view)
+    {
+    	finish();
     }
     
     private long timeInMilliseconds()
