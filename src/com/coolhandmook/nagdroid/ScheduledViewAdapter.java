@@ -1,8 +1,5 @@
 package com.coolhandmook.nagdroid;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -15,18 +12,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ScheduledViewAdapter extends ArrayAdapter<ScheduledLaunch> {
+public class ScheduledViewAdapter extends ArrayAdapter<Nag> {
 
 	private Activity activity;
-	private DateFormat dateFormatter;
 
 	public ScheduledViewAdapter(Activity activity,
 								int textViewResourceId,
-								List<ScheduledLaunch> schedule)
+								List<Nag> schedule)
 	{
 		super(activity, textViewResourceId, schedule);
 		this.activity = activity;
-		dateFormatter = SimpleDateFormat.getDateTimeInstance();
 	}
 	
 	@Override
@@ -48,7 +43,7 @@ public class ScheduledViewAdapter extends ArrayAdapter<ScheduledLaunch> {
 		}
 
 		ApplicationInfo app = null;
-		ScheduledLaunch launch = getItem(position);
+		Nag launch = getItem(position);
 		PackageManager packageManager = activity.getPackageManager();
 		ImageView icon = (ImageView) row.findViewById(R.id.applicationIcon);
 		
@@ -64,7 +59,7 @@ public class ScheduledViewAdapter extends ArrayAdapter<ScheduledLaunch> {
 		applicationName.setText(packageManager.getApplicationLabel(app).toString());
 
 		TextView time = (TextView) row.findViewById(R.id.scheduledTime);
-		time.setText(dateFormatter.format(new Date(launch.time)));
+		time.setText(Integer.toString(launch.hour) + ":" + Integer.toString(launch.minute));
 
 		return row;
 	}

@@ -29,9 +29,9 @@ public class MainActivity extends Activity {
     @Override
     public void onResume()
     {
-    	super.onResume();	
+    	super.onResume();
         viewAdapter = new ScheduledViewAdapter(this, R.id.scheduledApplicationName,
-        									   database.findScheduledApplications(Long.MAX_VALUE));
+        									   database.allNagsSortedByTime());
         
         ListView list = (ListView) findViewById(R.id.scheduleList);
         list.setAdapter(viewAdapter);
@@ -65,11 +65,12 @@ public class MainActivity extends Activity {
     	if (item.getItemId() == R.id.remove_schedule)
     	{
     		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-    		ScheduledLaunch launch = viewAdapter.getItem(info.position);
+    		Nag launch = viewAdapter.getItem(info.position);
 
     		Intent scheduleRemove = new Intent(this, NagService.class);
     		scheduleRemove.setAction(NagService.SCHEDULE_REMOVE);
-    		scheduleRemove.putExtra(NagService.ARG_TIME, launch.time);
+    		scheduleRemove.putExtra(NagService.ARG_HOUR, launch.hour);
+    		scheduleRemove.putExtra(NagService.ARG_MINUTE, launch.minute);
     		scheduleRemove.putExtra(NagService.ARG_PACKAGE, launch.packageName);
     		startService(scheduleRemove);
 

@@ -1,8 +1,5 @@
 package com.coolhandmook.nagdroid;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -44,9 +41,12 @@ public class NewNagActivity extends Activity {
 		Intent intent = getPackageManager().getLaunchIntentForPackage(application.packageName);
     	if (intent != null)
     	{
+    		TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
+        	
     		Intent scheduleNew = new Intent(this, NagService.class);
     		scheduleNew.setAction(NagService.SCHEDULE_NEW);
-    		scheduleNew.putExtra(NagService.ARG_TIME, timeInMilliseconds());
+    		scheduleNew.putExtra(NagService.ARG_HOUR, timePicker.getCurrentHour());
+    		scheduleNew.putExtra(NagService.ARG_MINUTE, timePicker.getCurrentMinute());
     		scheduleNew.putExtra(NagService.ARG_PACKAGE, application.packageName);
     		startService(scheduleNew);
     	}
@@ -57,16 +57,6 @@ public class NewNagActivity extends Activity {
     public void onNagCancel(View view)
     {
     	finish();
-    }
-    
-    private long timeInMilliseconds()
-    {
-    	TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
-    	Calendar calendar = new GregorianCalendar();
-    	calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
-    	calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
-    	calendar.set(Calendar.SECOND, 0);
-    	return calendar.getTimeInMillis();
     }
     
 }

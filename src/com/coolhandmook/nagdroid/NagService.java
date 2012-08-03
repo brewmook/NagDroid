@@ -1,5 +1,8 @@
 package com.coolhandmook.nagdroid;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 
 import android.app.AlarmManager;
@@ -14,7 +17,8 @@ public class NagService extends IntentService
 	public final static String SCHEDULE_REMOVE = "com.coolhandmook.nagdroid.SCHEDULE_REMOVE";
 	public final static String TRIGGER_ALARM = "com.coolhandmook.nagdroid.TRIGGER";
 
-	public final static String ARG_TIME = "com.coolhandmook.nagdroid.TIME";
+	public final static String ARG_HOUR = "com.coolhandmook.nagdroid.HOUR";
+	public final static String ARG_MINUTE = "com.coolhandmook.nagdroid.MINUTE";
 	public final static String ARG_PACKAGE = "com.coolhandmook.nagdroid.PACKAGE";
 	
 	private Database database;
@@ -42,36 +46,47 @@ public class NagService extends IntentService
 	@Override
 	protected void onHandleIntent(Intent intent)
 	{
+		List<Nag> nags = null;
 		if (intent.getAction() == SCHEDULE_NEW)
 		{
-			database.addSchedule(new ScheduledLaunch(intent.getLongExtra(ARG_TIME, 0),
-													 intent.getStringExtra(ARG_PACKAGE)));
-			checkSchedule();
+			database.addSchedule(intentToNag(intent));
+			nags = database.allNagsSortedByTime();
 		}
 		else if (intent.getAction() == SCHEDULE_REMOVE)
 		{
-			database.removeSchedule(new ScheduledLaunch(intent.getLongExtra(ARG_TIME, 0),
-														intent.getStringExtra(ARG_PACKAGE)));
+			database.removeSchedule(intentToNag(intent));
+			nags = database.allNagsSortedByTime();
 		}
 		else if (intent.getAction() == TRIGGER_ALARM)
 		{
-			checkSchedule();
+			nags = database.allNagsSortedByTime();
+			launchApplicationsDueNow(nags);
 		}
-		updateAlarm();
+		updateAlarm(nags);
 	}
 	
-	private void checkSchedule()
+	private Nag intentToNag(Intent intent)
 	{
-		long time = System.currentTimeMillis();
-		long upperBound = time + 5000;
-
-		List<ScheduledLaunch> schedule = database.findScheduledApplications(upperBound);
-		for (int i = 0; i < schedule.size(); ++i)
-		{
-			launchApplication(schedule.get(i).packageName);
-		}
+		return new Nag(intent.getIntExtra(ARG_HOUR, 0),
+			   	       intent.getIntExtra(ARG_MINUTE, 0),
+			   	       intent.getStringExtra(ARG_PACKAGE));
+	}
+	
+	private void launchApplicationsDueNow(List<Nag> nags)
+	{
+		Calendar calendar = new GregorianCalendar();
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		int minute = calendar.get(Calendar.MINUTE);
 		
-		database.removeScheduledApplications(upperBound);
+		Iterator<Nag> iterator = nags.iterator();
+		while (iterator.hasNext())
+		{
+			Nag nag = iterator.next();
+			if (hour == nag.hour && minute == nag.minute)
+			{
+				launchApplication(nag.packageName);
+			}
+		}
 	}
 	
 	private void launchApplication(String packageName)
@@ -80,20 +95,67 @@ public class NagService extends IntentService
     	startActivity(intent);
 	}
 
-	private void updateAlarm()
+	private void updateAlarm(List<Nag> nags)
 	{
-		long currentTime = System.currentTimeMillis();
-		ScheduledLaunch nextLaunch = database.nextScheduledLaunch(currentTime);
-		if (nextLaunch != null)
+		if (nags != null)
 		{
-			if (nextLaunch.time > 0)
+			Nag next = findNextNag(nags);
+			if (next != null)
 			{
 				Intent trigger = new Intent(this, NagService.class);
 				trigger.setAction(TRIGGER_ALARM);
 				AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 				PendingIntent pendingIntent = PendingIntent.getService(this, 0, trigger, 0);
-				alarmManager.set(AlarmManager.RTC, nextLaunch.time, pendingIntent);
+				alarmManager.set(AlarmManager.RTC, alarmTime(next), pendingIntent);
 			}
 		}
+	}
+	
+	private long alarmTime(Nag nag)
+	{
+		Calendar calendar = new GregorianCalendar();
+		long currentTime = calendar.getTimeInMillis();
+
+		calendar.set(Calendar.HOUR_OF_DAY, nag.hour);
+		calendar.set(Calendar.MINUTE, nag.minute);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+
+		if (currentTime > calendar.getTimeInMillis())
+		{
+			calendar.roll(Calendar.DAY_OF_YEAR, 1);
+		}
+		
+		return calendar.getTimeInMillis();
+	}
+	
+	private Nag findNextNag(List<Nag> nags)
+	{
+		Nag result = null;
+
+		if (nags != null)
+		{
+			Calendar calendar = new GregorianCalendar();
+			int clockTime = (calendar.get(Calendar.HOUR_OF_DAY) * 60) + calendar.get(Calendar.MINUTE);
+
+			Iterator<Nag> iterator = nags.iterator();
+			while (iterator.hasNext())
+			{
+				Nag nag = iterator.next();
+				int nagTime = (nag.hour * 60) + nag.minute;
+				if (nagTime > clockTime)
+				{
+					result = nag;
+					break;
+				}
+			}
+			
+			if (result == null && !nags.isEmpty())
+			{
+				result = nags.get(0);
+			}
+		}
+
+		return result;
 	}
 }

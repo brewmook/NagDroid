@@ -11,15 +11,26 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     }
 	
 	@Override
-	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE " + Database.SCHEDULED_TABLE + " ("
-					+ Database.SCHEDULED_TIME + " INTEGER,"
-				    + Database.SCHEDULED_PACKAGE + " TEXT);");
+	public void onCreate(SQLiteDatabase db)
+	{
+		createScheduleTable(db);
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// nothing yet
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+	{
+		if (oldVersion != newVersion)
+		{
+			db.execSQL("DROP TABLE " + Database.SCHEDULED_TABLE + ";");
+			createScheduleTable(db);
+		}
 	}
-
+	
+	private void createScheduleTable(SQLiteDatabase db)
+	{
+		db.execSQL("CREATE TABLE " + Database.SCHEDULED_TABLE + " ("
+				+ Database.SCHEDULED_HOUR + " INTEGER,"
+				+ Database.SCHEDULED_MINUTE + " INTEGER,"
+			    + Database.SCHEDULED_PACKAGE + " TEXT);");
+	}
 }
