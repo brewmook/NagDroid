@@ -1,5 +1,8 @@
 package com.coolhandmook.nagdroid;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -14,7 +17,8 @@ public class NewNagActivity extends Activity {
 	private ApplicationViewAdapter viewAdapter;
 
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+	{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_nag);
         
@@ -22,12 +26,16 @@ public class NewNagActivity extends Activity {
         Spinner spinner = (Spinner) findViewById(R.id.applicationNameSpinner);
         spinner.setAdapter(viewAdapter);
         
+        Calendar calendar = new GregorianCalendar();
+        
         TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
+        timePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         getMenuInflater().inflate(R.menu.activity_new_nag, menu);
         return true;
     }
