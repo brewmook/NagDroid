@@ -59,7 +59,7 @@ public class ScheduledViewAdapter extends ArrayAdapter<Nag> {
 		applicationName.setText(packageManager.getApplicationLabel(app).toString());
 
 		TextView time = (TextView) row.findViewById(R.id.scheduledTime);
-		time.setText(Integer.toString(launch.hour) + ":" + Integer.toString(launch.minute));
+		time.setText(String.format("%02d:%02d", launch.hour, launch.minute));
 
 		return row;
 	}
