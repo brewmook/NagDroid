@@ -106,7 +106,7 @@ public class NagService extends IntentService
 				trigger.setAction(TRIGGER_ALARM);
 				AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 				PendingIntent pendingIntent = PendingIntent.getService(this, 0, trigger, 0);
-				alarmManager.set(AlarmManager.RTC, alarmTime(next), pendingIntent);
+				alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime(next), pendingIntent);
 			}
 		}
 	}
