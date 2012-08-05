@@ -39,16 +39,15 @@ public class Database {
 	public void removeNag(Nag launch)
 	{
 		db.delete(NAGS_TABLE,
-				  NAGS_COLUMN_HOUR + " = " + Integer.toString(launch.hour)
-				  + " AND " + NAGS_COLUMN_MINUTE + " = " + Integer.toString(launch.minute)
-				  + " AND " + NAGS_COLUMN_PACKAGE + " = '" + launch.packageName + "'",
+				  "ROWID= " + Integer.toString(launch.rowId),
 				  null);
 	}
 	
 	public List<Nag> allNagsSortedByTime()
 	{
 		Cursor cursor = db.rawQuery(
-				"SELECT * from " + NAGS_TABLE
+				"SELECT " + NAGS_COLUMN_HOUR + "," + NAGS_COLUMN_MINUTE + "," + NAGS_COLUMN_PACKAGE + ",ROWID"
+				+ " FROM " + NAGS_TABLE
 				+ " ORDER BY "
 				+   NAGS_COLUMN_HOUR + " ASC, "
 				+   NAGS_COLUMN_MINUTE + " ASC ",
@@ -74,7 +73,7 @@ public class Database {
 
 	private Nag cursorToNag(Cursor cursor)
 	{
-		return new Nag(cursor.getInt(0), cursor.getInt(1), cursor.getString(2));
+		return new Nag(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getInt(3));
 	}
 
 	public void close()
