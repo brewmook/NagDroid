@@ -13,14 +13,9 @@ import android.content.Intent;
 
 public class NagService extends IntentService
 {
-	public final static String SCHEDULE_NEW = "com.coolhandmook.nagdroid.SCHEDULE_NEW";
-	public final static String SCHEDULE_REMOVE = "com.coolhandmook.nagdroid.SCHEDULE_REMOVE";
-	public final static String TRIGGER_ALARM = "com.coolhandmook.nagdroid.TRIGGER";
+	public final static String UPDATE = "com.coolhandmook.nagdroid.UPDATE";
+	public final static String TRIGGER = "com.coolhandmook.nagdroid.TRIGGER";
 
-	public final static String ARG_HOUR = "com.coolhandmook.nagdroid.HOUR";
-	public final static String ARG_MINUTE = "com.coolhandmook.nagdroid.MINUTE";
-	public final static String ARG_PACKAGE = "com.coolhandmook.nagdroid.PACKAGE";
-	
 	private Database database;
 	
 	public NagService()
@@ -46,30 +41,12 @@ public class NagService extends IntentService
 	@Override
 	protected void onHandleIntent(Intent intent)
 	{
-		List<Nag> nags = null;
-		if (intent.getAction() == SCHEDULE_NEW)
+		List<Nag> nags = database.allNagsSortedByTime();
+		if (intent.getAction() == TRIGGER)
 		{
-			database.addSchedule(intentToNag(intent));
-			nags = database.allNagsSortedByTime();
-		}
-		else if (intent.getAction() == SCHEDULE_REMOVE)
-		{
-			database.removeSchedule(intentToNag(intent));
-			nags = database.allNagsSortedByTime();
-		}
-		else if (intent.getAction() == TRIGGER_ALARM)
-		{
-			nags = database.allNagsSortedByTime();
 			launchApplicationsDueNow(nags);
 		}
 		updateAlarm(nags);
-	}
-	
-	private Nag intentToNag(Intent intent)
-	{
-		return new Nag(intent.getIntExtra(ARG_HOUR, 0),
-			   	       intent.getIntExtra(ARG_MINUTE, 0),
-			   	       intent.getStringExtra(ARG_PACKAGE));
 	}
 	
 	private void launchApplicationsDueNow(List<Nag> nags)
@@ -103,7 +80,7 @@ public class NagService extends IntentService
 			if (next != null)
 			{
 				Intent trigger = new Intent(this, NagService.class);
-				trigger.setAction(TRIGGER_ALARM);
+				trigger.setAction(TRIGGER);
 				AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 				PendingIntent pendingIntent = PendingIntent.getService(this, 0, trigger, 0);
 				alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTime(next), pendingIntent);

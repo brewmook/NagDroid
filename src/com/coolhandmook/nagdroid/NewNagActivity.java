@@ -46,17 +46,19 @@ public class NewNagActivity extends Activity {
     	int selected = spinner.getLastVisiblePosition();
     	
     	ApplicationInfo application = viewAdapter.getItem(selected);
-		Intent intent = getPackageManager().getLaunchIntentForPackage(application.packageName);
-    	if (intent != null)
+    	if (getPackageManager().getLaunchIntentForPackage(application.packageName) != null)
     	{
     		TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
         	
-    		Intent scheduleNew = new Intent(this, NagService.class);
-    		scheduleNew.setAction(NagService.SCHEDULE_NEW);
-    		scheduleNew.putExtra(NagService.ARG_HOUR, timePicker.getCurrentHour());
-    		scheduleNew.putExtra(NagService.ARG_MINUTE, timePicker.getCurrentMinute());
-    		scheduleNew.putExtra(NagService.ARG_PACKAGE, application.packageName);
-    		startService(scheduleNew);
+    		Database database = new Database(this);
+    		database.addSchedule(new Nag(timePicker.getCurrentHour(),
+    									 timePicker.getCurrentMinute(),
+    									 application.packageName));
+    		database.close();
+    		
+    		Intent intent = new Intent(this, NagService.class);
+    		intent.setAction(NagService.UPDATE);
+    		startService(intent);
     	}
     	
     	finish();

@@ -67,12 +67,11 @@ public class MainActivity extends Activity {
     		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
     		Nag launch = viewAdapter.getItem(info.position);
 
-    		Intent scheduleRemove = new Intent(this, NagService.class);
-    		scheduleRemove.setAction(NagService.SCHEDULE_REMOVE);
-    		scheduleRemove.putExtra(NagService.ARG_HOUR, launch.hour);
-    		scheduleRemove.putExtra(NagService.ARG_MINUTE, launch.minute);
-    		scheduleRemove.putExtra(NagService.ARG_PACKAGE, launch.packageName);
-    		startService(scheduleRemove);
+    		database.removeSchedule(launch);
+    		
+    		Intent intent = new Intent(this, NagService.class);
+    		intent.setAction(NagService.UPDATE);
+    		startService(intent);
 
     		viewAdapter.remove(launch);
     		
