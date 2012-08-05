@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ScheduledViewAdapter extends ArrayAdapter<Nag> {
-
+	
 	private Activity activity;
 
 	public ScheduledViewAdapter(Activity activity,

@@ -18,6 +18,10 @@ public class Database {
 	public static final String NAGS_COLUMN_HOUR = "hour";
 	public static final String NAGS_COLUMN_MINUTE = "minute";
 	public static final String NAGS_COLUMN_PACKAGE = "package";
+	
+	private static final String SELECT_ALL_FROM_NAGS =
+			"SELECT " + NAGS_COLUMN_HOUR + "," + NAGS_COLUMN_MINUTE + "," + NAGS_COLUMN_PACKAGE + ",ROWID"
+			+ " FROM " + NAGS_TABLE;
 
 	private SQLiteDatabase db;
 	
@@ -29,11 +33,12 @@ public class Database {
 	
 	public void addNag(Nag launch)
 	{
-		ContentValues values = new ContentValues();
-		values.put(NAGS_COLUMN_HOUR, launch.hour);
-		values.put(NAGS_COLUMN_MINUTE, launch.minute);
-		values.put(NAGS_COLUMN_PACKAGE, launch.packageName);
-		db.insert(NAGS_TABLE, null, values);
+		db.insert(NAGS_TABLE, null, nagToContentValues(launch));
+	}
+	
+	public void updateNag(Nag launch)
+	{
+		db.update(NAGS_TABLE, nagToContentValues(launch), "ROWID="+Integer.toString(launch.rowId), null);
 	}
 	
 	public void removeNag(Nag launch)
@@ -46,8 +51,7 @@ public class Database {
 	public List<Nag> allNagsSortedByTime()
 	{
 		Cursor cursor = db.rawQuery(
-				"SELECT " + NAGS_COLUMN_HOUR + "," + NAGS_COLUMN_MINUTE + "," + NAGS_COLUMN_PACKAGE + ",ROWID"
-				+ " FROM " + NAGS_TABLE
+				SELECT_ALL_FROM_NAGS
 				+ " ORDER BY "
 				+   NAGS_COLUMN_HOUR + " ASC, "
 				+   NAGS_COLUMN_MINUTE + " ASC ",
@@ -56,6 +60,24 @@ public class Database {
 		List<Nag> result = cursorToNags(cursor);
 		cursor.close();
 		
+		return result;
+	}
+
+	public Nag findNagByRowId(int rowId)
+	{
+		Cursor cursor = db.rawQuery(
+				SELECT_ALL_FROM_NAGS
+				+ " WHERE ROWID=" + Integer.toString(rowId),
+				null);
+		
+		List<Nag> matches = cursorToNags(cursor);
+		cursor.close();
+
+		Nag result = null;
+		if (!matches.isEmpty())
+		{
+			result = matches.get(0);
+		}
 		return result;
 	}
 
@@ -79,6 +101,15 @@ public class Database {
 	public void close()
 	{
 		db.close();
+	}
+
+	private ContentValues nagToContentValues(Nag nag)
+	{
+		ContentValues values = new ContentValues();
+		values.put(NAGS_COLUMN_HOUR, nag.hour);
+		values.put(NAGS_COLUMN_MINUTE, nag.minute);
+		values.put(NAGS_COLUMN_PACKAGE, nag.packageName);
+		return values;
 	}
 	
 }

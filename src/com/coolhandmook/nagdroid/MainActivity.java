@@ -8,12 +8,14 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
-
+	
 	private ScheduledViewAdapter viewAdapter;
 	private Database database;
 
@@ -24,6 +26,19 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         database = new Database(this);
+        
+        ListView list = (ListView) findViewById(R.id.scheduleList);
+        list.setOnItemClickListener(new OnItemClickListener() {
+        	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        	{
+        		Intent intent = new Intent(MainActivity.this, NewNagActivity.class);
+            	intent.setAction(NewNagActivity.ACTION_EDIT);
+            	Nag nag = (Nag)parent.getItemAtPosition(position);
+            	intent.putExtra(NewNagActivity.EXTRA_EDIT_ID, nag.rowId);
+            	startActivity(intent);
+        	}
+		});
+        registerForContextMenu(list);
     }
     
     @Override
@@ -35,7 +50,6 @@ public class MainActivity extends Activity {
         
         ListView list = (ListView) findViewById(R.id.scheduleList);
         list.setAdapter(viewAdapter);
-        registerForContextMenu(list);
     }
     
     @Override
@@ -83,7 +97,9 @@ public class MainActivity extends Activity {
 
     public void onCreateNewNagClick(View view)
     {
-    	startActivity(new Intent(this, NewNagActivity.class));
+    	Intent intent = new Intent(this, NewNagActivity.class);
+    	intent.setAction(NewNagActivity.ACTION_NEW);
+    	startActivity(intent);
     }
 
 }
