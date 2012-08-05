@@ -51,7 +51,7 @@ public class NewNagActivity extends Activity {
     		TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
         	
     		Database database = new Database(this);
-    		database.addSchedule(new Nag(timePicker.getCurrentHour(),
+    		database.addNag(new Nag(timePicker.getCurrentHour(),
     									 timePicker.getCurrentMinute(),
     									 application.packageName));
     		database.close();

@@ -21,16 +21,16 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	{
 		if (oldVersion != newVersion)
 		{
-			db.execSQL("DROP TABLE " + Database.SCHEDULED_TABLE + ";");
+			db.execSQL("DROP TABLE " + Database.OLD_NAGS_TABLE + ";");
 			createScheduleTable(db);
 		}
 	}
 	
 	private void createScheduleTable(SQLiteDatabase db)
 	{
-		db.execSQL("CREATE TABLE " + Database.SCHEDULED_TABLE + " ("
-				+ Database.SCHEDULED_HOUR + " INTEGER,"
-				+ Database.SCHEDULED_MINUTE + " INTEGER,"
-			    + Database.SCHEDULED_PACKAGE + " TEXT);");
+		db.execSQL("CREATE TABLE " + Database.NAGS_TABLE + " ("
+				+ Database.NAGS_COLUMN_HOUR + " INTEGER,"
+				+ Database.NAGS_COLUMN_MINUTE + " INTEGER,"
+			    + Database.NAGS_COLUMN_PACKAGE + " TEXT);");
 	}
 }

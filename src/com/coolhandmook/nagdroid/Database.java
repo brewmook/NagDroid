@@ -11,12 +11,13 @@ import android.database.sqlite.SQLiteDatabase;
 public class Database {
 	
 	public static final String NAME = "nagdroid";
-	public static final int VERSION = 2;
+	public static final int VERSION = 3;
 
-	public static final String SCHEDULED_TABLE = "scheduled";
-	public static final String SCHEDULED_HOUR = "hour";
-	public static final String SCHEDULED_MINUTE = "minute";
-	public static final String SCHEDULED_PACKAGE = "package";
+	public static final String OLD_NAGS_TABLE = "scheduled";
+	public static final String NAGS_TABLE = "nags";
+	public static final String NAGS_COLUMN_HOUR = "hour";
+	public static final String NAGS_COLUMN_MINUTE = "minute";
+	public static final String NAGS_COLUMN_PACKAGE = "package";
 
 	private SQLiteDatabase db;
 	
@@ -26,31 +27,31 @@ public class Database {
     	db = dbOpener.getWritableDatabase();
 	}
 	
-	public void addSchedule(Nag launch)
+	public void addNag(Nag launch)
 	{
 		ContentValues values = new ContentValues();
-		values.put(SCHEDULED_HOUR, launch.hour);
-		values.put(SCHEDULED_MINUTE, launch.minute);
-		values.put(SCHEDULED_PACKAGE, launch.packageName);
-		db.insert(SCHEDULED_TABLE, null, values);
+		values.put(NAGS_COLUMN_HOUR, launch.hour);
+		values.put(NAGS_COLUMN_MINUTE, launch.minute);
+		values.put(NAGS_COLUMN_PACKAGE, launch.packageName);
+		db.insert(NAGS_TABLE, null, values);
 	}
 	
-	public void removeSchedule(Nag launch)
+	public void removeNag(Nag launch)
 	{
-		db.delete(SCHEDULED_TABLE,
-				  SCHEDULED_HOUR + " = " + Integer.toString(launch.hour)
-				  + " AND " + SCHEDULED_MINUTE + " = " + Integer.toString(launch.minute)
-				  + " AND " + SCHEDULED_PACKAGE + " = '" + launch.packageName + "'",
+		db.delete(NAGS_TABLE,
+				  NAGS_COLUMN_HOUR + " = " + Integer.toString(launch.hour)
+				  + " AND " + NAGS_COLUMN_MINUTE + " = " + Integer.toString(launch.minute)
+				  + " AND " + NAGS_COLUMN_PACKAGE + " = '" + launch.packageName + "'",
 				  null);
 	}
 	
 	public List<Nag> allNagsSortedByTime()
 	{
 		Cursor cursor = db.rawQuery(
-				"SELECT * from " + SCHEDULED_TABLE
+				"SELECT * from " + NAGS_TABLE
 				+ " ORDER BY "
-				+   SCHEDULED_HOUR + " ASC, "
-				+   SCHEDULED_MINUTE + " ASC ",
+				+   NAGS_COLUMN_HOUR + " ASC, "
+				+   NAGS_COLUMN_MINUTE + " ASC ",
 				null);
 		
 		List<Nag> result = cursorToNags(cursor);

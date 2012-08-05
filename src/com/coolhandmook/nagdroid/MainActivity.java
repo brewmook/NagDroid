@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
     		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
     		Nag launch = viewAdapter.getItem(info.position);
 
-    		database.removeSchedule(launch);
+    		database.removeNag(launch);
     		
     		Intent intent = new Intent(this, NagService.class);
     		intent.setAction(NagService.UPDATE);
