@@ -7,9 +7,14 @@ import java.util.List;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 
 public class NagService extends IntentService
 {
@@ -61,15 +66,32 @@ public class NagService extends IntentService
 			Nag nag = iterator.next();
 			if (hour == nag.hour && minute == nag.minute)
 			{
-				launchApplication(nag.packageName);
+				launchApplication(nag);
 			}
 		}
 	}
 	
-	private void launchApplication(String packageName)
+	private void launchApplication(Nag nag)
 	{
-		Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
-    	startActivity(intent);
+		PackageManager packageManager = getPackageManager();
+
+		ApplicationInfo app = null;
+		try { app = packageManager.getApplicationInfo(nag.packageName, 0); }
+		catch (NameNotFoundException e) {}
+
+		Intent applicationIntent = packageManager.getLaunchIntentForPackage(nag.packageName);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, applicationIntent, 0);
+
+		Notification notification = new Notification(R.drawable.ic_launcher, null, System.currentTimeMillis());
+		notification.setLatestEventInfo(getApplicationContext(),
+										"Nag!",
+										packageManager.getApplicationLabel(app),
+										contentIntent);
+		notification.defaults |= Notification.DEFAULT_SOUND;
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		
+		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.notify(nag.rowId, notification);
 	}
 
 	private void updateAlarm(List<Nag> nags)
